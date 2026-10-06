@@ -117,7 +117,10 @@ fn caller_is_admin_returns_false() {
         require_business_or_attestor(e, &admin, &business)
     });
 
-    assert!(!result, "admin that is NOT the business should return false");
+    assert!(
+        !result,
+        "admin that is NOT the business should return false"
+    );
 }
 
 /// Caller that holds both ATTESTOR and ADMIN (but is not the business) returns `false`.

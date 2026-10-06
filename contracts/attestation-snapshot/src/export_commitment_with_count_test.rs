@@ -256,16 +256,24 @@ fn commitment_is_order_independent() {
     let (env_a, client_a, admin_a) = setup();
     let biz_a1 = Address::generate(&env_a);
     let biz_a2 = Address::generate(&env_a);
-    record(&client_a, &env_a, &admin_a, &biz_a1, "2026-01", 100_000, 0, 1);
-    record(&client_a, &env_a, &admin_a, &biz_a2, "2026-01", 200_000, 0, 1);
+    record(
+        &client_a, &env_a, &admin_a, &biz_a1, "2026-01", 100_000, 0, 1,
+    );
+    record(
+        &client_a, &env_a, &admin_a, &biz_a2, "2026-01", 200_000, 0, 1,
+    );
     let (hash_a, count_a) = client_a.export_commitment_with_count();
 
     // Environment B: biz_b2 first, then biz_b1 (same data, reversed order).
     let (env_b, client_b, admin_b) = setup();
     let biz_b2 = Address::generate(&env_b);
     let biz_b1 = Address::generate(&env_b);
-    record(&client_b, &env_b, &admin_b, &biz_b2, "2026-01", 200_000, 0, 1);
-    record(&client_b, &env_b, &admin_b, &biz_b1, "2026-01", 100_000, 0, 1);
+    record(
+        &client_b, &env_b, &admin_b, &biz_b2, "2026-01", 200_000, 0, 1,
+    );
+    record(
+        &client_b, &env_b, &admin_b, &biz_b1, "2026-01", 100_000, 0, 1,
+    );
     let (hash_b, count_b) = client_b.export_commitment_with_count();
 
     assert_eq!(count_a, count_b, "both envs have the same record count");
@@ -319,7 +327,10 @@ fn attestation_count_field_mutation_changes_commitment() {
     record(&client, &env, &admin, &biz, "2026-01", 100_000, 0, 99);
     let (h2, _) = client.export_commitment_with_count();
 
-    assert_ne!(h1, h2, "attestation_count change must produce different hash");
+    assert_ne!(
+        h1, h2,
+        "attestation_count change must produce different hash"
+    );
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -467,7 +478,9 @@ fn same_metrics_different_period_produces_different_hash() {
 
     let (env_b, client_b, admin_b) = setup();
     let biz_b = Address::generate(&env_b);
-    record(&client_b, &env_b, &admin_b, &biz_b, "2026-99", 100_000, 0, 1);
+    record(
+        &client_b, &env_b, &admin_b, &biz_b, "2026-99", 100_000, 0, 1,
+    );
     let (h2, _) = client_b.export_commitment_with_count();
 
     assert_ne!(
@@ -533,13 +546,17 @@ fn recorded_at_included_in_commitment() {
     let (env_a, client_a, admin_a) = setup();
     env_a.ledger().with_mut(|l| l.timestamp = 1_000_000);
     let biz_a = Address::generate(&env_a);
-    record(&client_a, &env_a, &admin_a, &biz_a, "2026-01", 100_000, 0, 1);
+    record(
+        &client_a, &env_a, &admin_a, &biz_a, "2026-01", 100_000, 0, 1,
+    );
     let (h1, _) = client_a.export_commitment_with_count();
 
     let (env_b, client_b, admin_b) = setup();
     env_b.ledger().with_mut(|l| l.timestamp = 9_999_999);
     let biz_b = Address::generate(&env_b);
-    record(&client_b, &env_b, &admin_b, &biz_b, "2026-01", 100_000, 0, 1);
+    record(
+        &client_b, &env_b, &admin_b, &biz_b, "2026-01", 100_000, 0, 1,
+    );
     let (h2, _) = client_b.export_commitment_with_count();
 
     assert_ne!(
